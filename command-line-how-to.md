@@ -6,6 +6,6 @@ Copy from remote to Mac:
 
 Copy from local to remote Linux:
 
-```cd LOCALpath```
+```cd LOCALpath```\\
 ```scp *.m phelpmad@kidd282d-pc2.science.oregonstate.edu:/home/phelpmad/Desktop/REMOTEpath/```
 
