@@ -77,7 +77,7 @@ function [x0, iter, anew, bnew] = myBisect(f, xl, xr, atol, maxit, flag)
             break;
         elseif iter > maxit
             iter = maxit;
-            x0 = (a+b)/2; anew = a; bnew = b;
+            x0 = NaN; anew = a; bnew = b;
             if flag ~= 0
                 fprintf('No convergence in %g iterations.\n', iter);
                 fprintf('Try again with new values: [%.10f, %.10f]\n', ...
