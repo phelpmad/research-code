@@ -67,7 +67,7 @@ function [x, iter] = myNewton(y, dy, guess, atol, res, maxit, flag)
             end
             break;
         elseif iter > maxit
-            iter = iter; xnew = NaN;
+            iter = iter; x = NaN;
             if flag ~= 0
                 fprintf('No convergence.\n Iterations: %g\n', iter-1);
             end

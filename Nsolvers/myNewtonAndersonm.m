@@ -1,4 +1,4 @@
-function [x, iter] = myNewtonAndersonm(f, Jac, m, beta, x0, atol, res, maxit, flag)
+function [y, iter] = myNewtonAndersonm(f, Jac, m, beta, guess, atol, res, maxit, flag)
 %% ---------------------------------------------------------------------%%
 %% Newton-Anderson (m)
 %   
@@ -28,7 +28,10 @@ function [x, iter] = myNewtonAndersonm(f, Jac, m, beta, x0, atol, res, maxit, fl
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Examples:
-%
+% [f, Jac] = myCf();
+% m = 2; beta = 1; guess = 1; 
+% atol = 1e-8; res = 'A'; maxit = 10; flag = 0;
+% [x, iter] = myNewtonAndersonm(f, Jac, m, beta, guess, atol, res, maxit, flag);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     %% choose residual type and define function r
@@ -43,11 +46,11 @@ function [x, iter] = myNewtonAndersonm(f, Jac, m, beta, x0, atol, res, maxit, fl
 
     %% initialize variables
     iter = 0; resnorm = 0;
-    w(1) = - Jac(x0) \ f(x0);
-    x(1) = x0 + beta * w(1);
+    w(1) = - Jac(guess) \ f(guess);
+    x(1) = guess + beta * w(1);
     
     %% start Newton-Anderson (m) method
-    for k = 1:maxit+1
+    for k = 1:100
 
         %% Compute next update step w
         w(k+1) = - Jac(x(k)) \ f(x(k));
@@ -70,24 +73,30 @@ function [x, iter] = myNewtonAndersonm(f, Jac, m, beta, x0, atol, res, maxit, fl
         x(k+1) = x(k) + beta * w(k+1) - (E + beta .* F) * gamma;
 
         %% Compute residual 
-        resnorm = abs(r(x(k+1), x(k)));    
-  
-        %% Check convergence
-        if resnorm < atol
-            iter = iter; x = x(k+1);
-            if flag == 0
-                fprintf("Convergence in %g iterations to x* = %.12f\n", iter, x)
+        resnorm = abs(r(x(k+1), x(k)));   
+
+        while 1
+            %% Check convergence
+            if resnorm < atol
+                iter = iter; y = x(k+1); done = true;
+                if flag ~= 0
+                    fprintf("Convergence in %g iterations to x* = %.12f\n", iter, y)
+                end
+                break;
+            elseif iter > maxit
+                iter = iter; y= NaN; done = true;
+                if flag ~= 0 
+                    fprintf("No convergence using Newton-Anderson(m).\n")
+                end
+                break;
+            else
+            iter = iter + 1; done = false;
             end
+        end
+
+        %% exit for loop if convergence or maxit reached
+        if done == true
             break;
-        elseif iter > maxit
-            iter = maxit; x0 = x(end); x = x0, pause
-            if flag == 0 
-                fprintf("No convergence using Newton-Anderson(m).\n")
-            end
-            break;
-        else
-            iter = iter + 1;
         end
     end
-
 end

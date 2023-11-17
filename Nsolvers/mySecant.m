@@ -44,26 +44,40 @@ function [x, iter] = mySecant(f, a, b, atol, res, maxit, flag)
     x(3) = x(2) - f(x(2))*(x(2) - x(1))./(f(x(2)) - f(x(1)));
     
     %% Secant method
-    for k = 3:maxit
-    
-        resnorm = abs(r(x(k), x(k-1)));
-    
-        if resnorm < atol
-            iter = iter;
-            x = x(k);
-            if flag ~= 0
-                fprintf('You converged in %g iterations to x0 = %.10f.\n', ...
-                    iter, x);
+    for k = 3:100
+        
+        %% compute next value
+        x(k+1) = x(k) - f(x(k))*(x(k) - x(k-1))./(f(x(k)) - f(x(k-1)));
+
+        %% compute residual
+        resnorm = abs(r(x(k+1), x(k)));
+        
+        %% check convergence
+        while 1
+            if resnorm < atol
+                iter = iter; x = x(k+1); done = true;
+                if flag ~= 0
+                    fprintf('You converged in %g iterations to x0 = %.10f.\n', ...
+                        iter, x);
+                end
+                break;
+            elseif iter > maxit
+                iter = iter; x = NaN; done = true;
+                if flag ~= 0
+                    fprintf('No convergence with Secant method.\n');
+                end
+                break;
+            else
+                done = false;
+                iter = iter + 1;
             end
-            break;
-        elseif iter > maxit
-            error('No convergence.');
-            break;
-        else
-            % secant method 
-            x(k+1) = x(k) - f(x(k))*(x(k) - x(k-1))./(f(x(k)) - f(x(k-1)));
-            iter = iter + 1;
         end
+
+        %% exit for loop if method converged or maxit reached
+        if done == true
+            break;
+        end
+
     end
   
 end

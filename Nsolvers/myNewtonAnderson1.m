@@ -75,6 +75,7 @@ function [x, iter] = myNewtonAnderson1(y, dy, beta, guess, atol, res, maxit, fla
             end
             break;
         elseif iter > maxit
+            x = NaN;
             if flag ~= 0
                 fprintf("No convergence. The maximum number of iterations were exceeded.\n");
             end
