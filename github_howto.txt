@@ -1,0 +1,30 @@
+ggggGit HOWTO:
+
+WORKFLOW:
+$ cd <repo>
+$ git clone 
+$ git switch -c work
+
+$ git status
+$ git add 
+$ git commit -m "type message here"
+
+$ git checkout master
+$ git pull
+$ git rebase master work
+$ git checkout master
+$ git merge --ff-only work
+$ git push
+$ git branch -d work
+
+MARK WORKFLOW:
+https://github.com/marcpaterno/devel-notes/blob/master/git-workflow.md  
+
+
+UPDATE GLOBAL USERNAME/EMAIL:
+$ git config --global user.email "you@example.com"
+$ git config --global user.name "Your Name"
+
+
+REMOVE STALE BRANCHES:
+$ git remote prune origin
